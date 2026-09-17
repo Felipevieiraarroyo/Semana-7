@@ -1,0 +1,30 @@
+import {
+  IsDateString,
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator'
+
+export class CreateMedicosDto {
+  @IsString()
+  @IsNotEmpty({ message: 'El nombre es obligatorio' })
+  nombre: string
+
+  @IsString()
+  @IsNotEmpty({ message: 'El apellido es obligatorio' })
+  apellido: string
+
+  @IsDateString({}, { message: 'La fecha de nacimiento debe ser una fecha válida' })
+  fechaNacimiento: string
+
+  @IsString()
+  @IsNotEmpty({ message: 'El teléfono es obligatorio' })
+  telefono: string
+
+  @IsEmail({}, { message: 'El correo no tiene un formato válido' })
+  email: string
+
+  @IsInt({ message: 'La especialidadId debe ser un número entero' })
+  especialidadId: number
+}
