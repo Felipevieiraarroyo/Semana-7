@@ -1,6 +1,8 @@
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module.js'
+import { PrismaExceptionFilter } from './prisma/prisma-exception.filter.js';
+
 import 'dotenv/config'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -11,6 +13,8 @@ async function bootstrap() {
       transform: true,
     }),
   )
+
+  app.useGlobalFilters(new PrismaExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000)
 }
