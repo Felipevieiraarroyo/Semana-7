@@ -7,13 +7,19 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
 import { MedicosService } from './medicos.service.js';
 import { CreateMedicosDto } from './dto/create-medicos.dto.js';
 import { UpdateMedicosDto } from './dto/update-medicos.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 
 @Controller('medicos')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('RECEPCIONISTA')
 export class MedicosController {
   constructor(
     private readonly medicosService: MedicosService,
