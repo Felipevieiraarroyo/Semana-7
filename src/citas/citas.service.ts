@@ -12,7 +12,7 @@ export class CitasService {
   async create(data: {
     pacienteId: number;
     medicoId: number;
-    fechaHora: Date;
+    fechaHora: string;
     estado?: 'PROGRAMADA' | 'COMPLETADA' | 'CANCELADA';
   }) {
     const paciente = await this.pacientesService.findOne(data.pacienteId);
