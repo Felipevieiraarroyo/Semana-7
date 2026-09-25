@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module.js'
 import { PrismaExceptionFilter } from './prisma/prisma-exception.filter.js';
+import { LoggingInterceptor } from './common/logging.interceptor.js';
 
 import 'dotenv/config'
 
@@ -17,6 +18,7 @@ async function bootstrap() {
   )
 
   app.useGlobalFilters(new PrismaExceptionFilter());
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('Clínica Salud Integral')
