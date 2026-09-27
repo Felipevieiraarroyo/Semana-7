@@ -85,6 +85,55 @@ In production applications, observability is essential for understanding how you
 - **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
 - **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
 
+## Repaso integrador — Pipeline de POST /citas
+
+El endpoint POST /citas recorre diferentes componentes de NestJS antes de generar la respuesta:
+
+1. **JwtAuthGuard**
+Verifica que la solicitud tenga una sesión válida mediante un token JWT.
+2. **RolesGuard**
+Comprueba que el usuario autenticado tenga el rol necesario para ejecutar la operación.
+3. **LoggingInterceptor**
+Intercepta la solicitud y comienza a medir el tiempo de ejecución del request.
+4. **ValidationPipe**
+Valida y transforma los datos recibidos en el body de acuerdo con el DTO correspondiente. Si los datos no cumplen las reglas de validación, la solicitud se rechaza.
+5. **CitasController**
+Recibe la solicitud HTTP y delega la operación al CitasService.
+6. **CitasService**
+Contiene la lógica de negocio para crear la cita. Antes de crearla, utiliza PacientesService para comprobar que el paciente exista.
+7. **Prisma**
+Si todas las validaciones de negocio son correctas, se realiza la operación correspondiente en la base de datos.
+8. **PrismaExceptionFilter**
+Si Prisma genera una excepción, el filtro la captura y la transforma en una respuesta HTTP adecuada.
+9. **LoggingInterceptor**
+Una vez finalizado el procesamiento, registra el tiempo total de ejecución antes de devolver la respuesta al cliente.
+
+## Flujo resumido
+
+Request
+   ↓
+JwtAuthGuard
+   ↓
+RolesGuard
+   ↓
+LoggingInterceptor
+   ↓
+ValidationPipe
+   ↓
+CitasController
+   ↓
+CitasService
+   ↓
+PacientesService
+   ↓
+Prisma
+   ↓
+PrismaExceptionFilter (si ocurre un error)
+   ↓
+LoggingInterceptor
+   ↓
+Response
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
