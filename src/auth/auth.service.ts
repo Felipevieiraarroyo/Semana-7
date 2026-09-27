@@ -4,12 +4,13 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
 
   async register(
     email: string,
@@ -55,7 +56,7 @@ export class AuthService {
         email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRET as string,
+      this.configService.get<string>('JWT_SECRET') as string,
       {
         expiresIn: '8h',
       },
